@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block css %}
+.css-Pane {
+    padding: 14px 16px 22px;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 10px;
+}
+
+div {
+    display: block;
+}
+
+.css-MaxWidthGrid {
+    max-width: 960px;
+}
+
+.css-Title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: normal;
+    line-height: 40px;
+    width: 520px;
+}
+
+.css-Detail {
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 22px;
+    margin-top: 4px;
+}
+
+.css-ContentRatings {
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+    line-height: 22px;
+    padding: 8px 0px;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+    margin-top: 14px;
+    border-top: 1px solid rgb(237, 237, 237);
+    border-bottom: 1px solid rgb(237, 237, 237);
+}
+
+.css-ContentRatings em {
+    color: rgb(255, 47, 110);
+    font-style: normal;
+}
+
+.css-ButtonBlock {
+    float: left;
+    margin: 39px 30px 0px 0px;
+}
+
+.css-Self-button {
+    width: 254px;
+    display: flex;
+    vertical-align: top;
+    box-sizing: border-box;
+    width: 254px;
+    height: 40px;
+    background: rgb(255, 47, 110);
+    border-radius: 6px;
+    margin: 0px auto;
+    overflow: hidden;
+}
+
+.css-Self-Rate {
+    float: left;
+    margin: 15px 0px 0px;
+}
+
+.css-RateTitle {
+    text-align: left;
+}
+
+.css-Self-wordRate {
+    display: inline-block;
+}
+
+.css-Self-Stars {
+    margin: 3px 0px 0px;
+}
+
+.css-UnratedStars {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    height: 40px;
+}
+
+.wine_image {
+    margin: auto;
+}
+
+{% endblock %}
+{% block content %}
+    {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
+    {% comment %} <img src="https://via.placeholder.com/150"> {% endcomment %}
+    <div class="grid-x grid-padding-x">
+        <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
+            <div class="css-Pane">
+                <img class="wine_image" src="https://via.placeholder.com/150">
+                <div class="css-MaxWidthGrid">
+                    <h1 class="css-Title">{{ wine.title }}</h1>
+                    <div class="css-Detail">{{ wine.country }} ・ {{ wine.winery }}</div>
+                    <div class="css-ContentRatings">Rating ★{{ avg_rate }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }}</em></div>
+                    <div class="css-ButtonBlock">
+                        <div class="css-Self-button">
+                            <button class="css-StylelessButton-ActionButton">
+                                <div class="contentActionStatusImage css-StatusWithImage">
+                                    <span src="data:image/" class="css-UIImg-StatusImage"></span>
+                                    <div class="css-ActionStatus">Add to WishList</div>
+                                </div>
+                            </button>
+                            <button aria-label="Open action sheet" class="css-StylelessButton-ActionDropDownButton">
+                                <svg fill="" width="24" height="24" viewBox="0 0 24 24" class="css-ArrowDropDownSvg">
+                                    <path fill="#FFF" fill-rule="evenodd" d="M12 16l6-6H6z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="css-Self-Rate">
+                        <div class="css-RateTitle">
+                            <div class="css-Self-wordRate">Rate {{ my_rate.rating }}</div>
+                        </div>
+                        <div class="css-Self-Stars">
+                            <div class="css-UnratedStars">
+                                <span src="data:image/" class="css-UIImg-StarImg"></span>
+                                <span src="data:image/svg+xml;base64,+" class="css-UIImg-StarImg"></span>
+                                <span src="data:image/svg+xml;base64,+" class="css-UIImg-StarImg"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

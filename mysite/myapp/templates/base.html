@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <style>
+      body, html {
+          height: 100%;
+          margin: 0;
+          font-family: Roboto, sans-serif;
+      }
+
+      .base-nav-ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: white;
+          height: 80px;
+      }
+
+      li a {
+          display: block;
+          text-align: center;
+          padding: 14px 16px;
+          color: #EA6B66;
+      }
+
+      .topnavbar {
+          border-bottom: 1px solid grey;
+      }
+
+      .homebutton {
+          font-size: 30px;
+          float: left;
+      }
+
+      .search-input {
+          padding: 15px 0;
+          margin: auto;
+          width: 50%;
+          height: 50%;
+          
+      }
+
+      .form-control {
+          height: 3rem;
+          margin: 0 0 0rem;
+          padding: 0 2rem;
+          border-radius: 6px;
+          box-shadow: 0 3px 10px 0 rgba(0,0,0,0.1), 0 1px 4px 0 rgba(0,0,0,0.35);
+      }
+
+      .symbols {
+          font-size: 30px;
+          float: right;
+      }
+
+      {% block css %}
+      {% endblock %}
+    </style>
+  </head>
+  {% comment %} <body style="background-image: url({% static 'image/back.jpg' %});"> {% endcomment %}
+  <body>
+    <nav class="topnavbar">
+      <ul class="base-nav-ul">
+        <li class="homebutton"><a href="/" style="padding: 14px 16px; color:#EA6B66">Winee</a></li>
+        {% if user.is_authenticated %}
+            <li class="symbols"><a href="/MyPage/" style="margin-right: 1em">O</a></li>
+            <li class="symbols"><a href="/Rate/">★</a></li>
+            {% comment %} <li><a href="/logout/">&nbsp; Logout</a> </li> {% endcomment %}
+        {% else %}
+            <li class="register"><a href="/login/">Login</a></li>
+            <li class="register"><a href="/register/">Sing Up</a></li>
+        {% endif %}
+        <li class="search-input">
+            <form method="get" action="{% url 'search' %}">
+                <input class="form-control" type="text" placeholder="Search by brand, winery, or year" aria-label="Search" name="b" value="{{b}}">
+            </form>
+        </div>
+      </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/vendor/what-input.js" %}"></script>
+    <script src="{% static "js/vendor/foundation.js" %}"></script>
+    <script src="{% static "js/app.js" %}"></script>
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'base.html'%}
+{% block css %}
+  .container {
+    margin: auto;
+  }
+
+  .searchResultBox {
+    display: table-cell;
+    width: 232px;
+    text-align: center;
+  }
+
+  .contentInfoBlock {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  h5 h {
+    font-size: 15px;
+    color: grey;
+  }
+
+  a p {
+    text-align: center;
+    margin: auto;
+    width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+{% endblock %}
+{% block content %}
+  <p></p>
+  <h5 style="padding-left: 20px;"><b>Top Results</b> <h>( Total {{ totalQ }} results )</h></h5>
+  <div class="container">
+    {% for wine in search %}
+      <div class="searchResultBox">
+        <div class="contentImageBlock">
+          {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
+          <a href="/wine_info/{{ wine.id }}"><img src="https://via.placeholder.com/150"></a>
+        </div>
+        <div class="contentInfoBlock">
+          <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
+          <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <nav align="center" aria-label="Page navigation">
+    <ul class="pagination">
+      <li></li>
+      {% if search.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ search.previous_page_number }}"><</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link"><</a></li>
+      {% endif %}
+      {% for num in search.paginator.page_range %}
+        {% if search.number == num %}
+          <li class="page-item active"><a class="page-link"><strong>{{ num }}</strong></a></li>
+        {% elif num > search.number|add:'-3' and num < search.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if search.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ search.next_page_number }}">></a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link">></a></li>
+      {% endif %}
+      <li></li>
+    </ul>
+  </nav>
+{% endblock %}
