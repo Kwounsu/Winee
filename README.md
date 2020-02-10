@@ -1,2 +1,2 @@
-# Winee
+# WineReco
 Wine Recommendation Website
