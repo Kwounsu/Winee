@@ -25,7 +25,7 @@ SECRET_KEY = 'v$r)cbwlau@(e9#zcr+f8(67op&z_)6j)6j+s^)210i^cub68@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = ['35.206.108.207'] 
 #ALLOWED_HOSTS = ['35.209.71.133', 'stackquoregg.com', 'www.stackquoregg.com']
 
 LOGIN_REDIRECT_URL = "/"
