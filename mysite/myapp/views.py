@@ -15,7 +15,7 @@ from . import forms
 def index(request):
     rate_stacked = models.Rating.objects.all().count()
     context = {
-        "title":"Winee",
+        "title":"Best Bottle",
         "rate_stacked":rate_stacked,
     }
     return render(request, "index.html", context=context)
@@ -48,7 +48,7 @@ def search(request):
     br = paginator.get_page(page)
     totalQ = models.Wine.objects.all().count()
     context = {
-        "title":"Winee",
+        "title":"Best Bottle",
         "search":br,
         "b":b,
         "page":page,
@@ -72,7 +72,7 @@ def wine_info(request, wine_id):
     predicted_rate = models.Wine.objects.filter(id=wine_id) \
                 .values('points')[0]['points'] / 20
     context = {
-        "title":"Winee",
+        "title":"Best Bottle",
         "wine":wine,
         "my_rate":my_rate,
         "rate_stacked":rate_stacked,
@@ -94,7 +94,7 @@ def mypage(request):
     l1=list(rate)
     l2=list(avg_rate)
     context = {
-        "title":"Winee",
+        "title":"Best Bottle",
         "wines":wines,
         "totalRatedWines":totalRatedWines,
         "rate":rate,
