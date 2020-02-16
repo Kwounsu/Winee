@@ -95,6 +95,10 @@ div {
     margin: auto;
 }
 
+.grid-x {
+    border-bottom: 1px solid rgb(237, 237, 237);
+}
+
 {% endblock %}
 {% block content %}
     {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
@@ -135,6 +139,17 @@ div {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x">
+        <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
+            <div class="info-contents-box">
+                <p></p>
+                <p>Description: {{ wine.description }}</p>
+                <p>Variety: {{ wine.variety }}</p>
+                <p>Winery: {{ wine.winery }}, {{ wine.province }}, {{ wine.country }}</p>
+                <p></p>
             </div>
         </div>
     </div>
