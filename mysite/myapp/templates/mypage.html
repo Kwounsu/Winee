@@ -1,4 +1,5 @@
 {% extends 'base.html'%}
+{% load static %}
 {% block css %}
   .container {
     margin: auto;
@@ -29,31 +30,23 @@
   }
 {% endblock %}
 {% block content %}
-  {% comment %} <p>rate: {{ rate }}</p>
-  <p>l1: {{ l1 }}</p>
-  <p>avg_rate: {{ avg_rate }}</p>
-  <p>l2: {{ l2 }}</p>
-  <p>for i in l1
-  {% for i in l1 %}
-    <p>{{ i }}</p>
-  {% endfor %}
-  </p> {% endcomment %}
   
   <h5 style="padding-left: 20px;"><b>Your wines <h>{{ totalRatedWines }}</h></b></h5>
-  <div class="container">
+  <div class="grid-container">
+    <div class="grid-x grid-margin-x small-up-3 medium-up-6 large-up-6">
     {% for wine in wines %}
-      <div class="searchResultBox">
-        <div class="contentImageBlock">
-          {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
-          <a href="/wine_info/{{ wine.id }}"><img src="https://via.placeholder.com/150"></a>
+        <div class="cell">
+          <div class="card">
+            <a href="/wine_info/{{ wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a>
+            <div class="card-section">
+              <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
+              <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
+              <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; height: 18px; font-size: 14px; color: grey;">Rate: {{ wine.id }}</p></a>
+            </div>
+          </div>
         </div>
-        <div class="contentInfoBlock">
-          <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
-          <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
-          <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; height: 18px; font-size: 14px; color: grey;">Rate: {{ l2 }}</p></a>
-        </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
   <nav align="center" aria-label="Page navigation">
     <ul class="pagination">

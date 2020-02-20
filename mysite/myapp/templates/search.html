@@ -1,19 +1,6 @@
 {% extends 'base.html'%}
+{% load static %}
 {% block css %}
-  .container {
-    margin: auto;
-  }
-
-  .searchResultBox {
-    display: table-cell;
-    width: 232px;
-    text-align: center;
-  }
-
-  .contentInfoBlock {
-    padding-right: 10px;
-    padding-left: 10px;
-  }
 
   h5 h {
     font-size: 15px;
@@ -23,7 +10,6 @@
   a p {
     text-align: center;
     margin: auto;
-    width: 150px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -32,19 +18,20 @@
 {% block content %}
   <p></p>
   <h5 style="padding-left: 20px;"><b>Top Results</b> <h>( Total {{ totalQ }} results )</h></h5>
-  <div class="container">
-    {% for wine in search %}
-      <div class="searchResultBox">
-        <div class="contentImageBlock">
-          {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
-          <a href="/wine_info/{{ wine.id }}"><img src="https://via.placeholder.com/150"></a>
+  <div class="grid-container">
+    <div class="grid-x grid-margin-x small-up-3 medium-up-6 large-up-6">
+      {% for wine in search %}
+        <div class="cell">
+          <div class="card">
+            <a href="/wine_info/{{ wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a>
+            <div class="card-section">
+              <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
+              <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
+            </div>
+          </div>
         </div>
-        <div class="contentInfoBlock">
-          <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
-          <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
-        </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
   <nav align="center" aria-label="Page navigation">
     <ul class="pagination">

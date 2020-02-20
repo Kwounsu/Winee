@@ -9,9 +9,8 @@ class Wine(models.Model):
     variety = models.CharField(max_length=40)
     points = models.FloatField(default=0)
     price = models.IntegerField(default=0)
-    description = models.CharField(max_length=1000)
     image = models.ImageField(
-        max_length=144, upload_to='wine_images/')
+        max_length=144, upload_to='wine_images/', default='image/wine_image.jpg')
     def __str__(self):
         return f'{self.id} {self.title}'
 

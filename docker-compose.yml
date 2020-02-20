@@ -2,23 +2,25 @@
 version: '3'
 
 services:
-   web:
-      build: .
-      volumes:
-         - .:/code
-      expose:
-         - 8000
-      command: python /code/mysite/manage.py runserver 0.0.0.0:8000
+  web:
+    build: .
+    volumes:
+      - .:/code
+    expose:
+      - 8000
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/code/mysite/Wine-Recommendation-Web-App-e8e3bcb25e70.json
+    command: python /code/mysite/manage.py runserver 0.0.0.0:8000
 
-   nginx:
-      restart: always
-      build: ./nginx/
-      depends_on:
-         - web
-      ports:
-         - "80:80"
-      #    - "443:443"
-      # volumes:
-      #    - ./mysite/myapp/static:/static
-      links:
-         - web:web
+  nginx:
+    restart: always
+    build: ./nginx/
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    # volumes:
+    #    - ./mysite/myapp/static:/static
+    links:
+      - web:web

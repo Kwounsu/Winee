@@ -15,10 +15,11 @@
                 font-family: Roboto, sans-serif;
             }
 
-            ul {
-                list-style-type: none;
-                margin: 0;
-                overflow: hidden;
+            .top-bar, .top-bar ul {
+                background-color: #EA6B66;
+            }
+
+            .title-bar {
                 background-color: #EA6B66;
             }
 
@@ -46,7 +47,6 @@
                 border: 1px solid #d7d7d7;
                 border-radius: 6px;
                 margin: auto;
-                width: 50%;
                 float: center;
                 box-sizing: border-box;
                 background-color: white;
@@ -71,7 +71,6 @@
             .search-input {
                 padding: 45px 0;
                 margin: auto;
-                width: 50%;
                 height: 50%;
             }
 
@@ -84,35 +83,54 @@
             }
         </style>
     </head>
-    <body> {% comment %} <body style="background-image: url({% static 'image/back.jpg' %});"> {% endcomment %}
-        <ul>
-            {% if user.is_superuser %}
-                <li style="float:left"><a href="/admin/">Admin</a></li>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <li class="symbols"><a href="/MyPage/" style="margin-right: 1em">O</a></li>
-                <li class="symbols"><a href="/Rate/">★</a></li>
-                {% comment %} <li><a href="/logout/">&nbsp; Logout</a> </li> {% endcomment %}
-            {% else %}
-                <li style="float:right"><a href="/login/">Login</a></li>
-                <li style="float:right"><a href="/register/">Sing Up</a></li>
-            {% endif %}
-        </ul>
-        <div class="banner text-center">
-            <p style="color:white"><b>{{title}}</b></p>
+    <body>
+        <div class="title-bar" data-responsive-toggle="home-nav" data-hide-for="medium">
+            <button class="menu-icon" type="button" data-toggle="home-nav"></button>
+            <div class="title-bar-title">Menu</div>
         </div>
+        <div class="top-bar" id="home-nav">
+            <div class="top-bar-left">
+                <ul class="dropdown menu" data-dropdown-menu>
+                </ul>
+            </div>
+            <div class="top-bar-right">
+                <ul class="menu">
+                    {% if user.is_authenticated %}
+                        <li style="font-size: 30px;"><a href="/Rate/">★</a></li>
+                        <li style="font-size: 30px;"><a href="/MyPage/">O</a></li>
+                        {% comment %} <li><a href="/logout/">&nbsp; Logout</a> </li> {% endcomment %}
+                    {% else %}
+                        <li><a href="/login/">Login</a></li>
+                        <li><a href="/register/">Sing Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="banner text-center">
+            {% comment %} <p style="color:white"><b>{{title}}</b></p> {% endcomment %}
+            <img src="{% static 'image/BestBottle-Icon.png' %}" alt="logo">
+        </div>
+        
         <div class="homeIndexContents">
             <div class="search">
-                <div class="search-input">
-                    <form method="get" action="{% url 'search' %}">
-                        <input class="form-control" type="text" placeholder="Search by brand, winery, or year" aria-label="Search" name="b" value="{{b}}">
-                    </form>
+                <div class="grid-x grid-padding-x">
+                    <div class="large-6 medium-8 small-12 large-offset-3 medium-offset-2 cell">
+                        <div class="search-input">
+                            <form method="get" action="{% url 'search' %}">
+                                <input class="form-control" type="text" placeholder="Search by brand or winery" aria-label="Search" name="b" value="{{b}}">
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="homeContainer">
-                <p class="homequote">"Where there is no <b>wine</b> there is no love" - Euripides  </p>
-                <p></p>
-                <p><b><h style="color:orange">★ {{rate_stacked}} ratings</h> have been stacked.</b></p>
+        </div>
+        <div class="grid-x grid-padding-x">
+            <div class="large-6 medium-8 small-12 large-offset-3 medium-offset-2 cell">
+                <div class="homeContainer">
+                    <p class="homequote">"Where there is no <b>wine</b> there is no love"   -Euripides</p>
+                    <p></p>
+                    <p><b><h style="color:orange">★ {{rate_stacked}} ratings</h> have been stacked.</b></p>
+                </div>
             </div>
         </div>
 

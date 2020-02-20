@@ -11,5 +11,5 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('wine_info/<int:wine_id>/', views.wine_info),
     path('MyPage/', views.mypage),
-    path('upload-csv/', views.wine_upload),
+    path('ratingWine/<int:wine_id>/<int:rate>', views.ratingWine),
 ]

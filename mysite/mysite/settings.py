@@ -25,8 +25,7 @@ SECRET_KEY = 'v$r)cbwlau@(e9#zcr+f8(67op&z_)6j)6j+s^)210i^cub68@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['35.206.108.207'] 
-#ALLOWED_HOSTS = ['35.209.71.133', 'stackquoregg.com', 'www.stackquoregg.com']
+ALLOWED_HOSTS = ['35.206.108.207','bestbottle.dev','www.bestbottle.dev']
 
 LOGIN_REDIRECT_URL = "/"
 
@@ -77,18 +76,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
     # 'default': {
-    #       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #       'NAME': 'django',
-    #       'USER': 'django',
-    #       'PASSWORD': '1235',
-    #       'HOST': '34.67.250.107',
-    #       'PORT': 5432,
-    #   }
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+    'default': {
+          'ENGINE': 'django.db.backends.postgresql_psycopg2',
+          'NAME': 'django',
+          'USER': 'django',
+          'PASSWORD': '1235',
+          'HOST': '35.192.62.170',
+          'PORT': 5432,
+      }
 }
 
 
@@ -131,3 +130,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
 MEDIA_URL = '/media/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'bestbottle'

@@ -39,11 +39,11 @@ def register(request):
 
 @login_required(login_url='/login/')
 def search(request):
-    br = models.Wine.objects.all().order_by('-points')
+    br = models.Wine.objects.all().order_by('-id')
     b = request.GET.get('b','')
     if b:
         br = br.filter(title__icontains=b) | br.filter(winery__icontains=b)
-    paginator = Paginator(br, 6)
+    paginator = Paginator(br, 12)
     page = request.GET.get('page')
     br = paginator.get_page(page)
     totalQ = models.Wine.objects.all().count()
@@ -91,50 +91,22 @@ def mypage(request):
                 .values('wine') 
                 # \
                 # .annotate(Avg('rating'))[0]['rating__avg']
-    l1=list(rate)
-    l2=list(avg_rate)
     context = {
         "title":"Best Bottle",
         "wines":wines,
         "totalRatedWines":totalRatedWines,
         "rate":rate,
         "avg_rate":avg_rate,
-        "l1":l1,
-        "l2":l2,
     }
     return render(request, 'mypage.html', context)
 
-@permission_required('admin.can_add_log_entry')
-def wine_upload(request):
-    template = "wine_upload.html"
-
-    prompt = {
-        'order': 'Order of the CSV does matter'
-    }
-
-    if request.method == "GET":
-        return render(request, template, prompt)
-
-    csv_file = request.FILES['file']
-
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, 'This is not a csv file')
-
-    data_set = csv_file.read().decode('unicode_escape')
-    # data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    for column in csv.reader(io_string, delimiter=',', quotechar='|'):
-        _, created = models.Wine.objects.update_or_create(
-            country=column[0],
-            description=column[1],
-            points=column[2],
-            price=column[3],
-            province=column[4],
-            title=column[5],
-            variety=column[6],
-            winery=column[7],
+def ratingWine(request, rate, wine_id):
+    wine = models.Wine.objects.get(id=wine_id)
+    if rate == 0:
+        query = models.Rating.objects.get(wine=wine,user=request.user)
+        query.delete()
+    else:
+        obj, created = models.Rating.objects.update_or_create(
+            user=request.user, wine=wine, rating=rate
         )
-
-    context = {}
-    return render(request, template, context)
+    return redirect("/wine_info/"+ str(wine_id) + "/")

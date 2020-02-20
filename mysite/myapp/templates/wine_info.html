@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block css %}
 .css-Pane {
     padding: 14px 16px 22px;
-    display: grid;
+    display: flex;
     grid-template-columns: auto auto;
     grid-gap: 10px;
 }
@@ -16,15 +17,12 @@ div {
 }
 
 .css-Title {
-    font-size: 34px;
     font-weight: 700;
     letter-spacing: normal;
     line-height: 40px;
-    width: 520px;
 }
 
 .css-Detail {
-    font-size: 17px;
     font-weight: 400;
     letter-spacing: -0.2px;
     line-height: 22px;
@@ -49,22 +47,12 @@ div {
     font-style: normal;
 }
 
-.css-ButtonBlock {
+.hollow {
     float: left;
-    margin: 39px 30px 0px 0px;
-}
-
-.css-Self-button {
-    width: 254px;
-    display: flex;
-    vertical-align: top;
-    box-sizing: border-box;
-    width: 254px;
     height: 40px;
-    background: rgb(255, 47, 110);
     border-radius: 6px;
-    margin: 0px auto;
     overflow: hidden;
+    margin: auto;
 }
 
 .css-Self-Rate {
@@ -73,11 +61,8 @@ div {
 }
 
 .css-RateTitle {
+    font-size: 17px;
     text-align: left;
-}
-
-.css-Self-wordRate {
-    display: inline-block;
 }
 
 .css-Self-Stars {
@@ -92,63 +77,64 @@ div {
 }
 
 .wine_image {
-    margin: auto;
+    max-width: 25%;
+    float: left;
 }
 
 .grid-x {
     border-bottom: 1px solid rgb(237, 237, 237);
 }
 
+.button-rating {
+    background: none;
+    font-size: 40px; 
+    padding: inherit;
+    color: orange;
+}
+
 {% endblock %}
 {% block content %}
     {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
     {% comment %} <img src="https://via.placeholder.com/150"> {% endcomment %}
-    <div class="grid-x grid-padding-x">
-        <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
-            <div class="css-Pane">
-                <img class="wine_image" src="https://via.placeholder.com/150">
-                <div class="css-MaxWidthGrid">
-                    <h1 class="css-Title">{{ wine.title }}</h1>
-                    <div class="css-Detail">{{ wine.country }} ・ {{ wine.winery }}</div>
-                    <div class="css-ContentRatings">Rating ★{{ avg_rate }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }}</em></div>
-                    <div class="css-ButtonBlock">
-                        <div class="css-Self-button">
-                            <button class="css-StylelessButton-ActionButton">
-                                <div class="contentActionStatusImage css-StatusWithImage">
-                                    <span src="data:image/" class="css-UIImg-StatusImage"></span>
-                                    <div class="css-ActionStatus">Add to WishList</div>
-                                </div>
-                            </button>
-                            <button aria-label="Open action sheet" class="css-StylelessButton-ActionDropDownButton">
-                                <svg fill="" width="24" height="24" viewBox="0 0 24 24" class="css-ArrowDropDownSvg">
-                                    <path fill="#FFF" fill-rule="evenodd" d="M12 16l6-6H6z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="css-Self-Rate">
-                        <div class="css-RateTitle">
-                            <div class="css-Self-wordRate">Rate {{ my_rate.rating }}</div>
-                        </div>
-                        <div class="css-Self-Stars">
-                            <div class="css-UnratedStars">
-                                <span src="data:image/" class="css-UIImg-StarImg"></span>
-                                <span src="data:image/svg+xml;base64,+" class="css-UIImg-StarImg"></span>
-                                <span src="data:image/svg+xml;base64,+" class="css-UIImg-StarImg"></span>
-                            </div>
-                        </div>
+    <div class="grid-x grid-margin-x">
+        <div class="large-8 medium-12 small-12 cell large-offset-2">
+            <div class="cell large-2 meduim-2 small-4">
+                <img class="wine_image" src="{% static 'image/wine_image.jpg' %}" alt="wineImage">
+            </div>
+            <div class="cell large-4 meduim-4 small-4">
+                <h2 class="css-Title">{{ wine.title }}</h2>
+                <div class="css-Detail">{{ wine.country }} ・ {{ wine.winery }}</div>
+                <div class="css-ContentRatings">Average Rating ★{{ avg_rate }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }}</em></div>
+                <button class="hollow button alert" href="#" style="margin-top: 20px; margin-right: 20px;">Add to WishList</button>
+                <div class="css-Self-Rate">
+                    <div class="css-RateTitle">
+                        <div class="css-Self-wordRate"><b>My Rate ★ {{ my_rate.rating }}</b></div>
+                        {% comment %} <p>★★★★★</p> {% endcomment %}
+                        {% if my_rate.rating is none %}
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">★</a>
+                        {% else %}
+                            <a class="button-rating">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="grid-x grid-padding-x">
-        <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
+        <div class="large-8 medium-12 small-12 large-offset-2 medium-offset-2">
             <div class="info-contents-box">
                 <p></p>
-                <p>Description: {{ wine.description }}</p>
-                <p>Variety: {{ wine.variety }}</p>
-                <p>Winery: {{ wine.winery }}, {{ wine.province }}, {{ wine.country }}</p>
+                <h6><b>Variety:</b> {{ wine.variety }}</h6>
+                <h6><b>Winery:</b> {{ wine.winery }}, {{ wine.province }}, {{ wine.country }}</h6>
                 <p></p>
             </div>
         </div>
