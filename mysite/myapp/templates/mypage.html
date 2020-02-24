@@ -1,20 +1,6 @@
 {% extends 'base.html'%}
 {% load static %}
 {% block css %}
-  .container {
-    margin: auto;
-  }
-
-  .searchResultBox {
-    display: table-cell;
-    width: 232px;
-    text-align: center;
-  }
-
-  .contentInfoBlock {
-    padding-right: 10px;
-    padding-left: 10px;
-  }
 
   h5 h {
     color: grey;
@@ -23,25 +9,22 @@
   a p {
     text-align: center;
     margin: auto;
-    width: 150px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 {% endblock %}
 {% block content %}
-  
   <h5 style="padding-left: 20px;"><b>Your wines <h>{{ totalRatedWines }}</h></b></h5>
   <div class="grid-container">
     <div class="grid-x grid-margin-x small-up-3 medium-up-6 large-up-6">
-    {% for wine in wines %}
+    {% for wine in rates %}
         <div class="cell">
           <div class="card">
-            <a href="/wine_info/{{ wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a>
+            <a href="/wine_info/{{ wine.wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a>
             <div class="card-section">
-              <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
-              <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
-              <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; height: 18px; font-size: 14px; color: grey;">Rate: {{ wine.id }}</p></a>
+              <a href="/wine_info/{{ wine.wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.wine.title }}</p></a>
+              <a href="/wine_info/{{ wine.wine.id }}"><p style="margin-bottom: 0px; height: 18px; font-size: 14px; color: gray;">My Rate: <h style="color:orange">★{{ wine.rating }}</h></p></a>
             </div>
           </div>
         </div>

@@ -11,5 +11,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('wine_info/<int:wine_id>/', views.wine_info),
     path('MyPage/', views.mypage),
-    path('ratingWine/<int:wine_id>/<int:rate>', views.ratingWine),
+    path('ratingWine/<int:wine_id>/<int:rate>/', views.ratingWine),
+    # path('test/<int:theWine>/', views.getPredictRate),
 ]

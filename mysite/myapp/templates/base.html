@@ -97,8 +97,8 @@
         <div class="top-bar-right">
           <ul class="menu">
             {% if user.is_authenticated %}
-                <li style="font-size: 30px;"><a href="/Rate/">★</a></li>
-                <li style="font-size: 30px;"><a href="/MyPage/">O</a></li>
+                <li style="font-size: 30px;"><a href="/MyPage/">★</a></li>
+                <li><a href="/logout/">Logout</a></li>
             {% else %}
                 <li><a href="/login/">Login</a></li>
                 <li><a href="/register/">Sing Up</a></li>
@@ -111,7 +111,7 @@
       <div class="large-8 medium-12 small-12 cell large-offset-2">
         <div class="search-input">
           <form method="get" action="{% url 'search' %}">
-            <input class="form-control" type="text" placeholder="Search by brand or winery" aria-label="Search" name="b" value="{{b}}">
+            <input class="form-control" type="text" placeholder="Search by winery, year or brand" aria-label="Search" name="b" value="{{b}}">
           </form>
         </div>
       </div>

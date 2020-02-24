@@ -1,26 +1,82 @@
-{% extends "base.html" %}
-{% block css %}
-  .register {
-    width: 112px;
-  }
-{% endblock %}
-{% block title %}Login{% endblock %}
-{% block content %}
-<div class="grid-x grid-padding-x">
-  <div class="cell large-4 medium-4 small-12 large-offset-4 medium-offset-4">
-    <h2 class="text-center">Login</h2>
-    <form action="/login/" method="post">
-        {% csrf_token %}
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to the Best Bottle</title>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+      <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+    <style>
+      body, html {
+          height: 100%;
+          margin: 0;
+          font-family: Roboto, sans-serif;
+      }
 
-        {{ form.errors }}
-        <label>{{ form.username.label_tag }}</label>
-        {{ form.username }}
-        <label>{{ form.password.label_tag }}</label>
-        {{ form.password }}
-        <input type="submit" class="button expanded" value="Login" />
-        <a href="/register/" class="secondary button expanded">Register</a>
-        <input type="hidden" name="next" value="{{ request.GET.next }}" />
-    </form>
-  </div>
-</div>
-{% endblock %}
+      .base-nav-ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: white;
+          height: 80px;
+      }
+      
+      .topnavbar {
+          border-bottom: 1px solid grey;
+      }
+      
+      .top-bar input {
+          max-width: 100%;
+          margin-right: 0rem;
+      }
+
+      .homebutton {
+          font-size: 30px;
+          width: 18%;
+      }
+      
+      .register {
+        width: 112px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="topnavbar">
+      <div class="title-bar" data-responsive-toggle="home-nav" data-hide-for="medium">
+          <button class="menu-icon" type="button" data-toggle="home-nav"></button>
+          <div class="title-bar-title">Menu</div>
+      </div>
+      <div class="top-bar" id="home-nav">
+        <div class="top-bar-left">
+          <a href="/"><img src="{% static 'image/Small-Icon.png' %}" alt="logo"></a>
+        </div>
+      </div>
+    </nav>
+    <div class="grid-x grid-padding-x">
+      <div class="cell large-4 medium-4 small-12 large-offset-4 medium-offset-4">
+        <h2 class="text-center">Login</h2>
+        <form action="/login/" method="post">
+            {% csrf_token %}
+
+            {{ form.errors }}
+            <label>{{ form.username.label_tag }}</label>
+            {{ form.username }}
+            <label>{{ form.password.label_tag }}</label>
+            {{ form.password }}
+            <input type="submit" class="button expanded" value="Login" />
+            <a href="/register/" class="secondary button expanded">Register</a>
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+        </form>
+      </div>
+    </div>
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/vendor/what-input.js" %}"></script>
+    <script src="{% static "js/vendor/foundation.js" %}"></script>
+    <script src="{% static "js/app.js" %}"></script>
+  </body>
+</html>

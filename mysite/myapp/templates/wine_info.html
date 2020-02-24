@@ -94,22 +94,20 @@ div {
 
 {% endblock %}
 {% block content %}
-    {% comment %} <img src="/media/{{ wine.image }}"> {% endcomment %}
-    {% comment %} <img src="https://via.placeholder.com/150"> {% endcomment %}
     <div class="grid-x grid-margin-x">
         <div class="large-8 medium-12 small-12 cell large-offset-2">
             <div class="cell large-2 meduim-2 small-4">
-                <img class="wine_image" src="{% static 'image/wine_image.jpg' %}" alt="wineImage">
+                <img class="wine_image" src="https://storage.cloud.google.com/bestbottle/{{ wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project">
+                {% comment %} <img class="wine_image" src="{% static 'image/wine_image.jpg' %}" alt="wineImage"> {% endcomment %}
             </div>
             <div class="cell large-4 meduim-4 small-4">
                 <h2 class="css-Title">{{ wine.title }}</h2>
                 <div class="css-Detail">{{ wine.country }} ・ {{ wine.winery }}</div>
-                <div class="css-ContentRatings">Average Rating ★{{ avg_rate }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }}</em></div>
+                <div class="css-ContentRatings">Average Rating ★{{ avg_rate }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }} (official score: {{ temp_predicted_rate }})</em></div>
                 <button class="hollow button alert" href="#" style="margin-top: 20px; margin-right: 20px;">Add to WishList</button>
                 <div class="css-Self-Rate">
                     <div class="css-RateTitle">
                         <div class="css-Self-wordRate"><b>My Rate ★ {{ my_rate.rating }}</b></div>
-                        {% comment %} <p>★★★★★</p> {% endcomment %}
                         {% if my_rate.rating is none %}
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">★</a>
