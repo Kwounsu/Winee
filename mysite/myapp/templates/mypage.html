@@ -13,6 +13,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
 {% endblock %}
 {% block content %}
   <h5 style="padding-left: 20px;"><b>Your wines <h>{{ totalRatedWines }}</h></b></h5>
@@ -21,7 +22,9 @@
     {% for wine in rates %}
         <div class="cell">
           <div class="card">
-            <a href="/wine_info/{{ wine.wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a>
+            <div class="grid-x align-middle" style="height: 200px">
+              <a href="/wine_info/{{ wine.wine.id }}"><img class="small-1 cell" style="max-height: 200px" src="https://storage.cloud.google.com/bestbottle/{{ wine.wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a>
+            </div>{% comment %} <a href="/wine_info/{{ wine.wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a> {% endcomment %}
             <div class="card-section">
               <a href="/wine_info/{{ wine.wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.wine.title }}</p></a>
               <a href="/wine_info/{{ wine.wine.id }}"><p style="margin-bottom: 0px; height: 18px; font-size: 14px; color: gray;">My Rate: <h style="color:orange">★{{ wine.rating }}</h></p></a>

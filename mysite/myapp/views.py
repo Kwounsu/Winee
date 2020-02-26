@@ -83,12 +83,19 @@ def wine_info(request, wine_id):
     wine = models.Wine.objects.get(id=wine_id)
     try:
         my_rate = models.Rating.objects.get(wine=wine_id, user=request.user)
-        avg_rate = models.Rating.objects.filter(wine=wine_id) \
-                .values('wine') \
-                .annotate(Avg('rating'))[0]['rating__avg']
     except models.Rating.DoesNotExist:
         my_rate = None
-        avg_rate = 0
+    avg_rate_list = models.Rating.objects.filter(wine=wine_id)
+    avg_rate = 0
+    count = 0
+    for i in avg_rate_list:
+        avg_rate += i.rating
+        count += 1
+    if count > 0:
+        avg_rate = avg_rate / count
+    # avg_rate = models.Rating.objects.filter(wine=wine_id) \
+    #         .values('wine') \
+    #         .annotate(Avg('rating'))[0]['rating__avg']
     rate_stacked = models.Rating.objects.filter(wine=wine_id).count()
     temp_predicted_rate = models.Wine.objects.filter(id=wine_id) \
                 .values('points')[0]['points'] / 20
@@ -147,17 +154,26 @@ def getPredictRate(theUser, theWine, sim_function=sim_pearson):
     topSim = -1
     simRateScore = 0
     simUser = users[0].id
+    predicted_rate = 0
+    count=0
     for i in users:
         if theUser != i.id:
             r = sim_function(theUser, i.id)
-        if topSim < r:
-            topSim = r
-            simUser = i.id
-    simRatingObj = models.Rating.objects.get(wine=theWine, user=simUser)
-    if topSim < 0:
-        predicted_rate = (1-topSim) * simRatingObj.rating
-    else:
-        predicted_rate = topSim * simRatingObj.rating
+            simRatingObj = models.Rating.objects.get(wine=theWine, user=i.id)
+            if r < 0:
+                predicted_rate += (1+r) * simRatingObj.rating
+            else:
+                predicted_rate += r * simRatingObj.rating
+            count += 1
+    predicted_rate /= count
+    #     if topSim < r:
+    #         topSim = r
+    #         simUser = i.id
+    # simRatingObj = models.Rating.objects.get(wine=theWine, user=simUser)
+    # if topSim < 0:
+    #     predicted_rate = (1+topSim) * simRatingObj.rating
+    # else:
+    #     predicted_rate = topSim * simRatingObj.rating
     return predicted_rate
 
 # def getPredictRate(request, theWine, sim_function=sim_pearson):
