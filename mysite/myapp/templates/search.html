@@ -15,6 +15,10 @@
     text-overflow: ellipsis;
   }
 
+  a {
+    margin: auto;
+  }
+
   .card-image {
     height: 200px;
   }
@@ -29,7 +33,7 @@
         <div class="cell">
           <div class="card">
             <div class="grid-x align-middle" style="height: 200px">
-              <a href="/wine_info/{{ wine.id }}"><img class="small-1 cell" style="max-height: 200px" src="https://storage.cloud.google.com/bestbottle/{{ wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a>
+              <a href="/wine_info/{{ wine.id }}"><img class="small-1 cell" style="max-height: 200px; width: auto;" src="https://storage.cloud.google.com/bestbottle/{{ wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a>
             </div>
             {% comment %} <a href="/wine_info/{{ wine.id }}"><img class="wine_image" src="https://storage.cloud.google.com/bestbottle/{{ wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a> {% endcomment %}
             {% comment %} <a href="/wine_info/{{ wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a> {% endcomment %}

@@ -1,4 +1,6 @@
 {% load static %}
+{% load socialaccount %} 
+{% providers_media_js %}
 <!DOCTYPE html>
 <html class="no-js" lang="en" dir="ltr">
     <head>
@@ -21,6 +23,11 @@
 
             .title-bar {
                 background-color: #EA6B66;
+            }
+            
+            li {
+                margin-top: auto;
+                margin-bottom: auto;
             }
 
             li a {
@@ -98,16 +105,15 @@
                     {% if user.is_authenticated %}
                         <li style="font-size: 30px;"><a href="/MyPage/">★</a></li>
                         <li><a href="/logout/">Logout</a></li>
-                        {% comment %} <li><a href="/logout/">&nbsp; Logout</a> </li> {% endcomment %}
                     {% else %}
-                        <li><a href="/login/">Login</a></li>
-                        <li><a href="/register/">Sing Up</a></li>
+                        {% comment %} <li><a href="/login/">Login</a></li>
+                        <li><a href="/register/">Sign Up</a></li> {% endcomment %}
+                        <li><a href=" {% provider_login_url 'google' %}">Login</a><br></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
         <div class="banner text-center">
-            {% comment %} <p style="color:white"><b>{{title}}</b></p> {% endcomment %}
             <img src="{% static 'image/BestBottle-Icon.png' %}" alt="logo">
         </div>
         

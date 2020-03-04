@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# Strong Entity
 class Wine(models.Model):
     title = models.CharField(max_length=150)
     winery = models.CharField(max_length=70)
@@ -14,6 +15,7 @@ class Wine(models.Model):
     def __str__(self):
         return f'{self.id} {self.title}'
 
+# Weak Entity
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     wine = models.ForeignKey(Wine, on_delete=models.CASCADE)
@@ -21,3 +23,10 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user} {self.wine}'
+
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    wine = models.ForeignKey(Wine, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.wine} {self.user}'

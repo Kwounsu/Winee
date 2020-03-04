@@ -1,4 +1,7 @@
 {% load static %}
+{% load socialaccount %} 
+{% providers_media_js %}
+
 <!DOCTYPE html>
 <html class="no-js" lang="en" dir="ltr">
   <head>
@@ -58,20 +61,14 @@
       </div>
     </nav>
     <div class="grid-x grid-padding-x">
-      <div class="cell large-4 medium-4 small-12 large-offset-4 medium-offset-4">
-        <h2 class="text-center">Login</h2>
-        <form action="/login/" method="post">
-            {% csrf_token %}
-
-            {{ form.errors }}
-            <label>{{ form.username.label_tag }}</label>
-            {{ form.username }}
-            <label>{{ form.password.label_tag }}</label>
-            {{ form.password }}
-            <input type="submit" class="button expanded" value="Login" />
-            <a href="/register/" class="secondary button expanded">Register</a>
-            <input type="hidden" name="next" value="{{ request.GET.next }}" />
-        </form>
+      <div class="cell large-4 medium-4 small-12 large-offset-4 medium-offset-4" style="margin: auto; margin-top: 150px;">
+        <h2 class="text-center">Please Login</h2>
+        {% if user.is_authenticated %} 
+          <a href = "/accounts/logout" class="button expanded">Logout</a> 
+          <p>{{user.username}} is logged in</p>
+        {% else %}
+          <a href=" {% provider_login_url 'google' %}" class="button expanded">Google Login</a><br>
+        {% endif %}
       </div>
     </div>
     <script src="{% static "js/vendor/jquery.js" %}"></script>

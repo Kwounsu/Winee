@@ -1,4 +1,6 @@
 {% load static %}
+{% load socialaccount %} 
+{% providers_media_js %}
 <!DOCTYPE html>
 <html class="no-js" lang="en" dir="ltr">
   <head>
@@ -24,6 +26,11 @@
           overflow: hidden;
           background-color: white;
           height: 80px;
+      }
+
+      li {
+          margin-top: auto;
+          margin-bottom: auto;
       }
 
       li a {
@@ -74,9 +81,6 @@
       {% endblock %}
     </style>
   </head>
-  {% comment %} <body style="background-image: url({% static 'image/back.jpg' %});"> {% endcomment %}
-        {% comment %} <li class="homebutton"><a href="/" style="padding: 14px 16px; color:#EA6B66">Best Bottle</a></li> {% endcomment %}
-            {% comment %} <li><a href="/logout/">&nbsp; Logout</a> </li> {% endcomment %}
   <body>
     <nav class="topnavbar">
       <div class="title-bar" data-responsive-toggle="home-nav" data-hide-for="medium">
@@ -87,11 +91,6 @@
         <div class="top-bar-left">
           <ul class="dropdown menu" data-dropdown-menu>
             <li class="homebutton"><a href="/"><img src="{% static 'image/Small-Icon.png' %}" alt="logo"></a></li>
-            {% comment %} <li class="search-input">
-              <form method="get" action="{% url 'search' %}">
-                <input class="form-control" type="text" placeholder="Search by brand or winery" aria-label="Search" name="b" value="{{b}}">
-              </form>
-            </li> {% endcomment %}
           </ul>
         </div>
         <div class="top-bar-right">
@@ -100,8 +99,9 @@
                 <li style="font-size: 30px;"><a href="/MyPage/">★</a></li>
                 <li><a href="/logout/">Logout</a></li>
             {% else %}
-                <li><a href="/login/">Login</a></li>
-                <li><a href="/register/">Sing Up</a></li>
+                {% comment %} <li><a href="/login/">Login</a></li>
+                <li><a href="/register/">Sign Up</a></li> {% endcomment %}
+                <li><a href=" {% provider_login_url 'google' %}">Login</a><br></li>
             {% endif %}
           </ul>
         </div>
