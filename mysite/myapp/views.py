@@ -9,12 +9,13 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Avg, Subquery
 from math import sqrt
-
+from random import randint
 from . import models
 from . import forms
 
 # Create your views here.
 def index(request):
+    # Rating stacked total
     rate_stacked_count = models.Rating.objects.all().count()
     if rate_stacked_count >= 1000 and rate_stacked_count < 1000000:
         rate_stacked_count /= 1000
@@ -24,9 +25,48 @@ def index(request):
         rate_stacked = str(rate_stacked_count) + 'M'
     else:
         rate_stacked = rate_stacked_count
+    
+    # Trending wines / Wine Recommendation
+    wines = models.Wine.objects.all().order_by('-rate_stacked')[:10]
+    top_one_rate = 0
+    top_two_rate = 0
+    top_three_rate = 0
+    top_one_wine = []
+    top_two_wine = []
+    top_three_wine = []
+    for wine in wines:
+        # Get predicted rate
+        predicted_rate = 0
+        if rate_stacked_count > 0:
+            predicted_rate = getPredictRate(request.user.id, wine.id)
+        if predicted_rate == 0 or predicted_rate > 5:
+            predicted_rate = models.Wine.objects.filter(id=wine.id).values('points')[0]['points'] / 20
+        if top_three_rate < predicted_rate:
+            if top_two_rate < predicted_rate:
+                if top_one_rate < predicted_rate:
+                    top_three_rate = top_two_rate
+                    top_two_rate = top_one_rate
+                    top_one_rate = predicted_rate
+                    recommending_wine = models.Wine.objects.get(id=wine.id)
+                    top_one_wine.clear()
+                    top_one_wine.append(recommending_wine)
+                else:
+                    top_three_rate = top_two_rate
+                    top_two_rate = predicted_rate
+                    recommending_wine = models.Wine.objects.get(id=wine.id)
+                    top_two_wine.clear()
+                    top_two_wine.append(recommending_wine)
+            else:
+                top_three_rate = predicted_rate
+                recommending_wine = models.Wine.objects.get(id=wine.id)
+                top_three_wine.clear()
+                top_three_wine.append(recommending_wine)
+    recommending_wines = top_one_wine + top_two_wine + top_three_wine
+    
     context = {
         "title":"Best Bottle",
         "rate_stacked":rate_stacked,
+        "wines":recommending_wines,
     }
     return render(request, "index.html", context=context)
 
@@ -76,9 +116,10 @@ def mypage(request):
     wishlists = wishlists_queryset.filter(pk__in=wishlists_queryset)
     wishlistsNum = wishlists_queryset.count()
     totalRatedWines = wines.count()
-    paginator = Paginator(wines, 12)
+
+    paginator = Paginator(rates, 12)
     page = request.GET.get('page')
-    wines = paginator.get_page(page)
+    br = paginator.get_page(page)
     context = {
         "title":"Best Bottle",
         "wines":wines,
@@ -88,18 +129,106 @@ def mypage(request):
         "paginator":paginator,
         "wishlists":wishlists,
         "wishlistsNum":wishlistsNum,
+        "search":br,
     }
     return render(request, 'mypage.html', context)
+
+@login_required(login_url='/login/')
+def wine_info(request, wine_id):
+    wine = models.Wine.objects.get(id=wine_id)
+
+    # My Rate
+    try:
+        my_rate = models.Rating.objects.get(wine=wine_id, user=request.user)
+    except models.Rating.DoesNotExist:
+        my_rate = None
+    
+    try:
+        avg_rate = models.Rating.objects.filter(wine=wine_id) \
+            .values('wine') \
+            .annotate(Avg('rating'))[0]['rating__avg']
+    except:
+        avg_rate = 0
+
+    temp_predicted_rate = models.Wine.objects.filter(id=wine_id) \
+                .values('points')[0]['points'] / 20
+    predicted_rate = temp_predicted_rate
+
+    # Rate Stacked
+    rate_stacked_count = models.Rating.objects.filter(wine=wine_id).count()
+    if rate_stacked_count >= 1000 and rate_stacked_count < 1000000:
+        rate_stacked_count /= 1000
+        rate_stacked = str(rate_stacked_count) + 'K'
+    elif rate_stacked_count >= 1000000 and rate_stacked_count < 1000000000:
+        rate_stacked_count /= 1000000
+        rate_stacked = str(rate_stacked_count) + 'M'
+    else:
+        rate_stacked = rate_stacked_count
+    
+    # Predicted Rate
+    if rate_stacked_count > 0:
+        predicted_rate = getPredictRate(request.user.id, wine_id)
+    if predicted_rate == 0:
+        predicted_rate = temp_predicted_rate
+    
+    # WishList
+    try:
+        boolWishList = models.WishList.objects.get(wine=wine_id, user=request.user)
+    except models.WishList.DoesNotExist:
+        boolWishList = 0
+
+    # Rating Chart
+    Ones = 0
+    Twos = 0
+    Theres = 0
+    Fours = 0
+    Fives = 0
+
+    ratingQS = models.Rating.objects.filter(wine=wine_id)
+    for i in ratingQS:
+        if int(i.rating) == 1:
+            Ones += 1
+        elif int(i.rating) == 2:
+            Twos += 1
+        elif int(i.rating) == 3:
+            Theres += 1
+        elif int(i.rating) == 4:
+            Fours += 1
+        elif int(i.rating) == 5:
+            Fives += 1
+    chart = [Ones, Twos, Theres, Fours, Fives]
+    context = {
+        "title":"Best Bottle",
+        "wine":wine,
+        "my_rate":my_rate,
+        "rate_stacked":rate_stacked,
+        "avg_rate":avg_rate,
+        "temp_predicted_rate":temp_predicted_rate,
+        "predicted_rate":predicted_rate,
+        "boolWishList":boolWishList,
+        "chart":chart,
+    }
+    return render(request, 'wine_info.html', context)
+
 
 def ratingWine(request, rate, wine_id):
     wine = models.Wine.objects.get(id=wine_id)
     if rate == 0:
         query = models.Rating.objects.get(wine=wine, user=request.user)
         query.delete()
+        wine.rate_stacked -= 1
+        wine.save()
     else:
+        try:
+            query = models.Rating.objects.get(wine=wine, user=request.user)
+            query.delete()
+        except:
+            pass
         obj, created = models.Rating.objects.update_or_create(
             user=request.user, wine=wine, rating=rate
         )
+        wine.rate_stacked += 1
+        wine.save()
     return redirect("/wine_info/"+ str(wine_id) + "/")
 
 def sim_pearson(reqUser, user2):
@@ -124,80 +253,29 @@ def sim_pearson(reqUser, user2):
     for d_user2 in der_user2.iterator():
         sumY += d_user2.rating
         sumPowY += pow(d_user2.rating, 2)
-    return (sumXY - ((sumX * sumY) / count)) / sqrt((sumPowX - (pow(sumX, 2) / count)) * (sumPowY - (pow(sumY, 2) / count)))
+    result = 0
+    try:
+        result = (sumXY - ((sumX * sumY) / count)) / sqrt((sumPowX - (pow(sumX, 2) / count)) * (sumPowY - (pow(sumY, 2) / count)))
+    except:
+        pass
+    return result
 
 def getPredictRate(theUser, theWine, sim_function=sim_pearson):
     ratings = models.Rating.objects.filter(wine=theWine)
     users = User.objects.filter(pk__in=ratings.values('user_id'))
     predicted_rate = 0
-    count=0
+    sumR = 0
     for i in users:
         if theUser != i.id:
             r = sim_function(theUser, i.id)
             simRatingObj = models.Rating.objects.get(wine=theWine, user=i.id)
-            if r < 0:
-                predicted_rate += (1+r) * simRatingObj.rating
-            else:
-                predicted_rate += r * simRatingObj.rating
-            count += 1
-    predicted_rate /= count
-    return predicted_rate
-
-@login_required(login_url='/login/')
-def wine_info(request, wine_id):
-    wine = models.Wine.objects.get(id=wine_id)
-    try:
-        my_rate = models.Rating.objects.get(wine=wine_id, user=request.user)
-    except models.Rating.DoesNotExist:
-        my_rate = None
-    
-    avg_rate_list = models.Rating.objects.filter(wine=wine_id)
-    avg_rate = 0
-    count = 0
-    for i in avg_rate_list:
-        avg_rate += i.rating
-        count += 1
-    if count > 0:
-        avg_rate = avg_rate / count
-    # avg_rate = models.Rating.objects.filter(wine=wine_id) \
-    #         .values('wine') \
-    #         .annotate(Avg('rating'))[0]['rating__avg']
-
-    temp_predicted_rate = models.Wine.objects.filter(id=wine_id) \
-                .values('points')[0]['points'] / 20
-    predicted_rate = temp_predicted_rate
-
-    rate_stacked_count = models.Rating.objects.filter(wine=wine_id).count()
-    if rate_stacked_count >= 1000 and rate_stacked_count < 1000000:
-        rate_stacked_count /= 1000
-        rate_stacked = str(rate_stacked_count) + 'K'
-    elif rate_stacked_count >= 1000000 and rate_stacked_count < 1000000000:
-        rate_stacked_count /= 1000000
-        rate_stacked = str(rate_stacked_count) + 'M'
+            predicted_rate += r * simRatingObj.rating
+            sumR += r
+    if sumR == 0:
+        predicted_rate = 0
     else:
-        rate_stacked = rate_stacked_count
-    
-    # Get predicted rate only if there are more than 4 user rated
-    if rate_stacked_count > 4:
-        predicted_rate = getPredictRate(request.user.id, wine_id)
-    if predicted_rate == 0:
-        predicted_rate = temp_predicted_rate
-    
-    try:
-        boolWishList = models.WishList.objects.get(wine=wine_id, user=request.user)
-    except models.WishList.DoesNotExist:
-        boolWishList = 0
-    context = {
-        "title":"Best Bottle",
-        "wine":wine,
-        "my_rate":my_rate,
-        "rate_stacked":rate_stacked,
-        "avg_rate":avg_rate,
-        "temp_predicted_rate":temp_predicted_rate,
-        "predicted_rate":predicted_rate,
-        "boolWishList":boolWishList,
-    }
-    return render(request, 'wine_info.html', context)
+        predicted_rate /= sumR
+    return predicted_rate
 
 def AddWishList(request, wine_id):
     wine = models.Wine.objects.get(id=wine_id)

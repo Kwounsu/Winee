@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <form action="" method="POST">
+    {% csrf_token %}
+    User: <input type="text" name="user"/><br/>
+    Wine: <input type="text" name="wine"/><br/>
+    Rating: <input type="text" name="rating"/><br/>
+    <input type="submit" value="Rating"/>
+    </form>
+{% endblock %}

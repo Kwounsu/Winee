@@ -92,8 +92,8 @@ div {
     padding: inherit;
     color: orange;
 }
-
 {% endblock %}
+
 {% block content %}
     <div class="grid-x grid-padding-x">
         <div class="large-8 medium-12 small-12 cell large-offset-2">
@@ -101,7 +101,7 @@ div {
             <div class="cell large-4 meduim-4 small-4">
                 <h2 class="css-Title">{{ wine.title }}</h2>
                 <div class="css-Detail">{{ wine.country }} ・ {{ wine.winery }}</div>
-                <div class="css-ContentRatings">Average Rating ★{{ avg_rate|floatformat:1 }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate }}</em></div>
+                <div class="css-ContentRatings">Average Rating ★{{ avg_rate|floatformat:1 }} ({{ rate_stacked }})&nbsp;&nbsp;・&nbsp;&nbsp;<em>Predicted ★{{ predicted_rate|floatformat:1 }}</em></div>
                 {% if boolWishList == 0 %}
                     <a class="hollow button" href="/AddWishList/{{ wine.id }}/" style="margin-top: 20px; margin-right: 20px;">Add to WishList</a>
                 {% else %}
@@ -111,16 +111,44 @@ div {
                     <div class="css-RateTitle">
                         <div class="css-Self-wordRate"><b>My Rate ★ {{ my_rate.rating }}</b></div>
                         {% if my_rate.rating is none %}
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">☆</a>
+                        {% elif my_rate.rating == 1 %}
+                            <a class="button-rating">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
+                        {% elif my_rate.rating == 2 %}
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
+                        {% elif my_rate.rating == 3 %}
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
+                        {% elif my_rate.rating == 4 %}
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">★</a>
+                            <a class="button-rating">★</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">☆</a>
+                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
+                        {% else %}
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/1">★</a>
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/2">★</a>
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/3">★</a>
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/4">★</a>
-                            <a class="button-rating" href="/ratingWine/{{ wine.id }}/5">★</a>
-                        {% else %}
-                            <a class="button-rating">★</a>
-                            <a class="button-rating">★</a>
-                            <a class="button-rating">★</a>
-                            <a class="button-rating">★</a>
                             <a class="button-rating">★</a>
                             <a class="button-rating" href="/ratingWine/{{ wine.id }}/0" style="font-size:10pt">(cancel)</a>
                         {% endif %}
@@ -133,6 +161,7 @@ div {
         <div class="large-8 medium-12 small-12 large-offset-2 medium-offset-2">
             <div class="info-contents-box">
                 <p></p>
+                <canvas id="myChart" width="200" height="100"></canvas>
                 <h6><b>Variety:</b> {{ wine.variety }}</h6>
                 <h6><b>Winery:</b> {{ wine.winery }}, {{ wine.province }}, {{ wine.country }}</h6>
                 <h6><b>Experts score:</b> {{ wine.points }} (rated by WineEnthusiast)</h6>
@@ -140,4 +169,55 @@ div {
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1','2','3','4','5'],
+                    datasets: [{
+                        label: '# of Ratings',
+                        data: [{% for item in chart %}{{item}},{% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 185, 90, 0.6)',
+                            'rgba(255, 185, 90, 0.7)',
+                            'rgba(255, 185, 90, 0.8)',
+                            'rgba(255, 185, 90, 0.9)',
+                            'rgba(255, 185, 90, 1)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 185, 90, 1)',
+                            'rgba(255, 185, 90, 1)',
+                            'rgba(255, 185, 90, 1)',
+                            'rgba(255, 185, 90, 1)',
+                            'rgba(255, 185, 90, 1)',
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                display: false,
+                            }
+                        }]
+                    },
+                    layout: {
+                        padding: {
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -12,6 +12,7 @@ class Wine(models.Model):
     price = models.IntegerField(default=0)
     image = models.ImageField(
         max_length=144, upload_to='wine_images/', default='image/wine_image.jpg')
+    rate_stacked = models.IntegerField(default=0)
     def __str__(self):
         return f'{self.id} {self.title}'
 

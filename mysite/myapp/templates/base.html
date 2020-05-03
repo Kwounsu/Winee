@@ -7,11 +7,18 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!--Chart js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
     <title>{{title}}</title>
     <link rel="stylesheet" href="{% static "css/foundation.css" %}">
     <link rel="stylesheet" href="{% static "css/app.css" %}">
-      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
-      <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
     <style>
       body, html {
           height: 100%;
@@ -80,6 +87,8 @@
       {% block css %}
       {% endblock %}
     </style>
+    {% block head %}
+    {% endblock %}
   </head>
   <body>
     <nav class="topnavbar">

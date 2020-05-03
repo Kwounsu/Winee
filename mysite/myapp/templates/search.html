@@ -11,16 +11,13 @@
     text-align: center;
     margin: auto;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   a {
     margin: auto;
-  }
-
-  .card-image {
-    height: 200px;
   }
 
 {% endblock %}
@@ -39,7 +36,7 @@
             {% comment %} <a href="/wine_info/{{ wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a> {% endcomment %}
             <div class="card-section">
               <a href="/wine_info/{{ wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.title }}</p></a>
-              <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey;">{{ wine.winery }}</p></a>
+              <a href="/wine_info/{{ wine.id }}"><p style="font-size: 14px; color: grey; -webkit-line-clamp: 1;">{{ wine.winery }}</p></a>
             </div>
           </div>
         </div>

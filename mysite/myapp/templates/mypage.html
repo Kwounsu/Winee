@@ -10,9 +10,15 @@
     text-align: center;
     margin: auto;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
+
+  a {
+    margin: auto;
+  }
+
 
 {% endblock %}
 {% block content %}
@@ -20,11 +26,11 @@
     <h5 style="padding-left: 20px;"><b>Your wines <h>{{ totalRatedWines }}</h></b></h5>
     <div class="grid-container">
       <div class="grid-x grid-margin-x small-up-3 medium-up-6 large-up-6">
-      {% for wine in rates %}
+      {% for wine in search %}
           <div class="cell">
             <div class="card">
               <div class="grid-x align-middle" style="height: 200px">
-                <a href="/wine_info/{{ wine.wine.id }}"><img class="small-1 cell" style="max-height: 200px" src="https://storage.cloud.google.com/bestbottle/{{ wine.wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a>
+                <a href="/wine_info/{{ wine.wine.id }}"><img class="small-1 cell" style="max-height: 200px; width: auto;" src="https://storage.cloud.google.com/bestbottle/{{ wine.wine.image }}?authuser=1&organizationId=862848057491&supportedpurview=project"></a>
               </div>{% comment %} <a href="/wine_info/{{ wine.wine.id }}"><img src="{% static 'image/wine_image.jpg' %}" alt="wineImage"></a> {% endcomment %}
               <div class="card-section">
                 <a href="/wine_info/{{ wine.wine.id }}"><p style="margin-bottom: 0px; color: black;">{{ wine.wine.title }}</p></a>
