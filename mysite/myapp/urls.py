@@ -15,5 +15,4 @@ urlpatterns = [
     path('ratingWine/<int:wine_id>/<int:rate>/', views.ratingWine),
     path('AddWishList/<int:wine_id>/', views.AddWishList),
     path('DelWishList/<int:wine_id>/', views.DelWishList),
-    # path('', views.RatingChartView.as_view()),
 ]

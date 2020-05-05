@@ -142,14 +142,12 @@ def wine_info(request, wine_id):
         my_rate = models.Rating.objects.get(wine=wine_id, user=request.user)
     except models.Rating.DoesNotExist:
         my_rate = None
-    
     try:
         avg_rate = models.Rating.objects.filter(wine=wine_id) \
             .values('wine') \
             .annotate(Avg('rating'))[0]['rating__avg']
     except:
         avg_rate = 0
-
     temp_predicted_rate = models.Wine.objects.filter(id=wine_id) \
                 .values('points')[0]['points'] / 20
     predicted_rate = temp_predicted_rate
@@ -210,27 +208,6 @@ def wine_info(request, wine_id):
     }
     return render(request, 'wine_info.html', context)
 
-
-def ratingWine(request, rate, wine_id):
-    wine = models.Wine.objects.get(id=wine_id)
-    if rate == 0:
-        query = models.Rating.objects.get(wine=wine, user=request.user)
-        query.delete()
-        wine.rate_stacked -= 1
-        wine.save()
-    else:
-        try:
-            query = models.Rating.objects.get(wine=wine, user=request.user)
-            query.delete()
-        except:
-            pass
-        obj, created = models.Rating.objects.update_or_create(
-            user=request.user, wine=wine, rating=rate
-        )
-        wine.rate_stacked += 1
-        wine.save()
-    return redirect("/wine_info/"+ str(wine_id) + "/")
-
 def sim_pearson(reqUser, user2):
     sumX = 0        # sum of X
     sumY = 0        # sum of Y
@@ -276,6 +253,26 @@ def getPredictRate(theUser, theWine, sim_function=sim_pearson):
     else:
         predicted_rate /= sumR
     return predicted_rate
+
+def ratingWine(request, rate, wine_id):
+    wine = models.Wine.objects.get(id=wine_id)
+    if rate == 0:
+        query = models.Rating.objects.get(wine=wine, user=request.user)
+        query.delete()
+        wine.rate_stacked -= 1
+        wine.save()
+    else:
+        try:
+            query = models.Rating.objects.get(wine=wine, user=request.user)
+            query.delete()
+        except:
+            pass
+        obj, created = models.Rating.objects.update_or_create(
+            user=request.user, wine=wine, rating=rate
+        )
+        wine.rate_stacked += 1
+        wine.save()
+    return redirect("/wine_info/"+ str(wine_id) + "/")
 
 def AddWishList(request, wine_id):
     wine = models.Wine.objects.get(id=wine_id)
